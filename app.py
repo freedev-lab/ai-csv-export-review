@@ -6,9 +6,42 @@ import json
 import pathlib
 import sys
 import typing
+import csv
+import io
 
 
 COLUMNS = ("row_id", "title", "note")
+
+
+
+def encode_cell(value: str | None, policy: str) -> tuple[str, bool]:
+    """Encode one cell according to the export policy."""
+
+    # P3: Represent missing values.
+    if value is None:
+        return r"\N", False
+
+    # P4: Determine which character should be checked.
+    if policy == "trim-space-tab":
+        checked = value.lstrip(" \t")
+    else:
+        checked = value
+
+    # Check all four formula triggers.
+    neutralized = (
+        bool(checked)
+        and checked[0] in ("=", "+", "-", "@")
+    )
+
+    # P3: Escape every original backslash.
+    encoded = value.replace("\\", "\\\\")
+
+    # P4: Prefix exactly one apostrophe when necessary.
+    if neutralized:
+        encoded = "'" + encoded
+
+    return encoded, neutralized
+
 
 
 def export_rows(payload: dict[str, typing.Any], arguments: argparse.Namespace) -> dict[str, typing.Any]:
@@ -32,23 +65,67 @@ def export_rows(payload: dict[str, typing.Any], arguments: argparse.Namespace) -
         seen.add(row["row_id"])
         if any(key not in row or (row[key] is not None and not isinstance(row[key], str)) for key in ("title", "note")):
             raise ValueError(f"invalid row {index + 1}")
-    lines = [",".join(COLUMNS)]
+        
+
+    # P5: Create an in-memory CSV output.
+    output = io.StringIO(newline="")
+
+    writer = csv.writer(
+        output,
+        delimiter=",",
+        quotechar='"',
+        doublequote=True,
+        quoting=csv.QUOTE_MINIMAL,
+        lineterminator="\r\n",
+    )
+
+    # Write the CSV header.
+    writer.writerow(COLUMNS)
+
     audit = []
     exported = 0
+
+    # P2: Select only the exact requested tenant.
     for row in rows:
-        if tenant not in row["tenant"]:
+
+        if row["tenant"] != tenant:
             continue
-        for column in ("title", "note"):
-            value = (row[column] or "").replace("'", "''")
-            if value.startswith("="):
-                value = "'" + value
-                audit.append({"row_id": row["row_id"], "column": column})
-            row[column] = value
-        lines.append(",".join(row[column] for column in COLUMNS))
+
+        cells = []
+
+        # Process every exported column in the correct order.
+        for column in COLUMNS:
+
+            encoded, neutralized = encode_cell(
+                row[column],
+                policy
+            )
+
+            cells.append(encoded)
+
+            # Record every neutralized cell.
+            if neutralized:
+                audit.append({
+                    "row_id": row["row_id"],
+                    "column": column
+                })
+
+        # Write the complete row.
+        writer.writerow(cells)
         exported += 1
-    return {"csv": "\n".join(lines) + "\n", "neutralized_cells": audit,
-            "summary": {"input_rows": len(rows), "exported_rows": exported,
-                        "foreign_rows": len(rows) - exported, "neutralized_cells": len(audit), "redacted_cells": 0}}
+
+    # P5 and P6: Return the generated CSV and metadata.
+    return {
+        "csv": output.getvalue(),
+        "neutralized_cells": audit,
+        "summary": {
+            "input_rows": len(rows),
+            "exported_rows": exported,
+            "foreign_rows": len(rows) - exported,
+            "neutralized_cells": len(audit),
+            "redacted_cells": 0
+        }
+    }
 
 
 def main() -> int:

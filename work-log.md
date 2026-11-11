@@ -103,3 +103,54 @@
 
 ### Next Action
 - Repair the exporter and run the complete acceptance suite.
+
+
+
+
+## Repair 1 — Policy-Compliant CSV Export
+
+### Changes
+- Preserved the existing P1 input validation.
+- Replaced substring tenant matching with exact equality.
+- Added a reusable encode_cell() function.
+- Implemented null and backslash encoding.
+- Implemented both formula-neutralization policies.
+- Applied encoding to all exported columns.
+- Replaced manual CSV concatenation with csv.writer.
+- Configured CRLF record endings and QUOTE_MINIMAL.
+- Removed modifications to original input objects.
+
+### Validation
+- Executed the complete automated test suite.
+- Verified the primary fixture.
+- Verified the secondary fixture.
+- Checked audit information and summary counts.
+- Checked input immutability and repeatability.
+
+### Result
+testCli_whenHelpRequested_returnsUsage (app_test.StarterTests.testCli_whenHelpRequested_returnsUsage) ... ok
+testCli_whenInputMissing_reportsReadableError (app_test.StarterTests.testCli_whenInputMissing_reportsReadableError) ... ok
+testCli_whenJsonMalformed_reportsReadableError (app_test.StarterTests.testCli_whenJsonMalformed_reportsReadableError) ... ok
+testCli_whenPrimaryRead_returnsExportEnvelope (app_test.StarterTests.testCli_whenPrimaryRead_returnsExportEnvelope) ... ok
+test_backslashes_are_doubled_and_apostrophes_preserved (cell_encoding_test.CellEncodingTests.test_backslashes_are_doubled_and_apostrophes_preserved) ... ok
+test_null_empty_and_literal_backslash_n_remain_distinct (cell_encoding_test.CellEncodingTests.test_null_empty_and_literal_backslash_n_remain_distinct) ... ok
+test_writer_preserves_commas_quotes_and_embedded_newlines (csv_serialization_test.CsvSerializationTests.test_writer_preserves_commas_quotes_and_embedded_newlines) ... ok
+test_writer_uses_crlf_record_endings (csv_serialization_test.CsvSerializationTests.test_writer_uses_crlf_record_endings) ... ok
+test_direct_policy_checks_all_four_triggers (formula_neutralization_test.FormulaNeutralizationTests.test_direct_policy_checks_all_four_triggers) ... ok
+test_trim_policy_does_not_skip_newlines_or_existing_apostrophes (formula_neutralization_test.FormulaNeutralizationTests.test_trim_policy_does_not_skip_newlines_or_existing_apostrophes) ... ok
+test_trim_space_tab_policy_skips_only_spaces_and_tabs (formula_neutralization_test.FormulaNeutralizationTests.test_trim_space_tab_policy_skips_only_spaces_and_tabs) ... ok
+test_export_does_not_modify_original_payload (repeatability_test.RepeatabilityTests.test_export_does_not_modify_original_payload) ... ok
+test_repeated_exports_produce_identical_results (repeatability_test.RepeatabilityTests.test_repeated_exports_produce_identical_results) ... ok
+test_constructed_boundary_case (round_trip_checker_test.RoundTripCheckerTests.test_constructed_boundary_case) ... ok
+test_empty_input (round_trip_checker_test.RoundTripCheckerTests.test_empty_input) ... ok
+test_primary_fixture (round_trip_checker_test.RoundTripCheckerTests.test_primary_fixture) ... ok
+test_secondary_changes_some_cells_and_preserves_others (round_trip_checker_test.RoundTripCheckerTests.test_secondary_changes_some_cells_and_preserves_others) ... ok
+test_secondary_fixture (round_trip_checker_test.RoundTripCheckerTests.test_secondary_fixture) ... ok
+test_two_exports_of_same_object_are_identical (round_trip_checker_test.RoundTripCheckerTests.test_two_exports_of_same_object_are_identical) ... ok
+test_export_includes_only_exact_tenant (tenant_isolation_test.TenantIsolationTests.test_export_includes_only_exact_tenant) ... ok
+
+
+### Known Limitations
+- Formula neutralization implements the synthetic assessment policy.
+- It does not establish universal spreadsheet safety.
+
