@@ -37,3 +37,24 @@
 - Actual: Backslashes remain unchanged and apostrophes are doubled.
 - Result: FAILED as expected.
 - Cause: Incorrect cell encoding implementation.
+
+
+
+## Validation 4 — Formula Neutralization
+
+### Test 1: Direct Policy
+- Expected: All four formula triggers should be neutralized only when they appear at character zero.
+- Actual: The implementation only checks the equals sign and ignores row_id.
+- Result: FAILED as expected.
+- Cause: Incomplete formula detection.
+
+### Test 2: Trim-Space-Tab Policy
+- Expected: Leading ASCII spaces and tabs should be skipped when checking formula triggers.
+- Actual: Leading spaces and tabs are not handled correctly.
+- Result: FAILED as expected.
+- Cause: The selected consumer policy is not implemented.
+
+### Test 3: Newlines and Existing Apostrophes
+- Expected: Newlines must not be skipped, and existing apostrophe-prefixed values must not be neutralized again.
+- Actual: No cells were reported as neutralized.
+- Result: PASSED.
