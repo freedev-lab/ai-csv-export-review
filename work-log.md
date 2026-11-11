@@ -75,3 +75,31 @@
 - Actual: The second export produces different values because the first export modified the input.
 - Result: FAILED as expected.
 - Cause: The exporter does not preserve the original input.
+
+
+
+
+## Validation 6 — Reusable CSV Round-Trip Checker
+
+### Implementation
+- Created a reusable checker accepting the original payload and export result.
+- Added independent expected-cell encoding.
+- Added CSV parsing and exact record validation.
+- Added header, column count, row count and order checks.
+- Added audit and summary verification.
+- Added reverse decoding using the audit information.
+
+### Test Cases
+- Primary fixture.
+- Secondary fixture.
+- Empty input.
+- Constructed boundary case.
+- Repeated exports using the same object.
+- Comparison of changed and unchanged cells between fixtures.
+
+### Current Result
+- Tests are expected to expose the existing implementation defects.
+- No changes have been made to app.py yet.
+
+### Next Action
+- Repair the exporter and run the complete acceptance suite.
