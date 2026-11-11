@@ -154,3 +154,34 @@ test_export_includes_only_exact_tenant (tenant_isolation_test.TenantIsolationTes
 - Formula neutralization implements the synthetic assessment policy.
 - It does not establish universal spreadsheet safety.
 
+
+
+
+## Validation 7 — Input Validation and Error Handling
+
+### Tests
+- Invalid tenant values.
+- Invalid policy values.
+- Non-list rows.
+- Invalid row structures.
+- Missing and empty required fields.
+- Duplicate row IDs, including duplicates across tenants.
+- Valid null and empty cell values.
+- Validation of foreign rows before tenant selection.
+- CLI exit code and error output.
+- No partial stdout on fatal errors.
+- No cell-value leakage in error messages.
+
+### Expected Results
+- Invalid inputs produce ValueError.
+- Row errors identify only the one-based row position.
+- Invalid input produces exit code 2.
+- Fatal errors produce no stdout.
+- Error messages do not reveal cell values.
+- Valid null and empty values are accepted.
+
+### Result
+[Record your actual test results here.]
+
+### Conclusion
+P1 validation behavior has been tested.
