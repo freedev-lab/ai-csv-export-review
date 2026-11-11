@@ -56,14 +56,25 @@ that prevent it from satisfying the export policy P1-P6.
 - Consequence: A row_id beginning with a formula trigger such as =, +, - or @ is exported without the required neutralization. This means the implementation does not apply the P4 policy to every exported string.
 - Solution: Apply the cell encoding and formula neutralization process to all exported columns, including row_id, title and note. Preserve the required column order.
 
+
 ## 3. AI Claims Review
 
 | Claim | Verdict | Explanation |
 |-------|---------|-------------|
-| C1 | False | |
-| C2 | False | |
-| C3 | False | |
-| C4 | False | |
-| C5 | False | |
-| C6 | Confirmed | |
-| C7 | Not verifiable | |
+| C1 | False | Manual string joining does not safely serialize commas, quotes and multiline values. |
+| C2 | False | Only the equals sign is checked; the other three formula triggers are ignored. |
+| C3 | False | Null values and empty strings become identical, and backslashes are not escaped. |
+| C4 | False | Substring matching can include related tenant names such as fern-archive. |
+| C5 | False | The exporter modifies original row objects and changes repeated results. |
+| C6 | Confirmed | The four supplied CLI smoke checks pass. |
+| C7 | False | The tests do not establish universal spreadsheet safety. No spreadsheet application was tested. |
+
+## 4. Merge Verdict
+
+**Original AI implementation: Request changes.**
+
+The original implementation does not satisfy P1-P6.
+
+The corrected implementation addresses the identified defects through exact tenant matching, policy-compliant cell encoding, standard CSV serialization, nonmutating processing and automated acceptance tests.
+
+The corrected implementation should be considered ready for approval only after the complete test suite and both supplied fixtures pass.

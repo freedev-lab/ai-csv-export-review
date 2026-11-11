@@ -185,3 +185,39 @@ test_export_includes_only_exact_tenant (tenant_isolation_test.TenantIsolationTes
 
 ### Conclusion
 P1 validation behavior has been tested.
+
+
+
+## Validation 8 — Final Acceptance Review
+
+### Policy Review
+- P1: Input validation reviewed.
+- P2: Exact tenant isolation verified.
+- P3: Cell encoding verified.
+- P4: Both formula policies verified.
+- P5: CSV serialization verified.
+- P6: Repeatability and round-trip behavior verified.
+
+### AI Claims
+- C1 through C5: False.
+- C6: Confirmed.
+- C7: False.
+
+### Fixture Verification
+- Primary fixture: [Actual result]
+- Secondary fixture: [Actual result]
+- Both fixtures use the same reusable checker.
+- Changed and unchanged cells were compared.
+
+### Quality Checks
+- Automated test suite: [Actual result]
+- git diff --check: [Actual result]
+- Original input fixtures preserved.
+
+### Known Limitations
+The implementation follows the synthetic export policy.
+Universal spreadsheet safety is not guaranteed.
+
+### Final Status
+[Record whether all acceptance checks passed.]
+
