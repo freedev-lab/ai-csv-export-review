@@ -58,3 +58,20 @@
 - Expected: Newlines must not be skipped, and existing apostrophe-prefixed values must not be neutralized again.
 - Actual: No cells were reported as neutralized.
 - Result: PASSED.
+
+
+
+
+## Validation 5 — Input Immutability and Repeatability
+
+### Test 1: Original Input Immutability
+- Expected: The original payload must remain unchanged after exporting.
+- Actual: The exporter modifies title and note values in the original rows.
+- Result: FAILED as expected.
+- Cause: Direct assignment to the original row using row[column] = value.
+
+### Test 2: Repeatability
+- Expected: Two calls with the same payload must produce identical results.
+- Actual: The second export produces different values because the first export modified the input.
+- Result: FAILED as expected.
+- Cause: The exporter does not preserve the original input.
