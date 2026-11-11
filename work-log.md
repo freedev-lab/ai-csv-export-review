@@ -21,3 +21,19 @@
 - Actual: CSV uses \n.
 - Result: FAILED as expected.
 - Cause: Incorrect record separator.
+
+
+
+## Validation 3 — Cell Encoding
+
+### Test 1: Null, Empty and Literal Backslash-N
+- Expected: None, empty strings and literal \N must remain distinguishable.
+- Actual: Null is converted into an empty string, and literal backslash-N is not escaped.
+- Result: FAILED as expected.
+- Cause: Incorrect null handling and missing backslash escaping.
+
+### Test 2: Backslashes and Apostrophes
+- Expected: Backslashes should be doubled and apostrophes preserved.
+- Actual: Backslashes remain unchanged and apostrophes are doubled.
+- Result: FAILED as expected.
+- Cause: Incorrect cell encoding implementation.
