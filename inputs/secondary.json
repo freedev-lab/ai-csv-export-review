@@ -1,0 +1,66 @@
+{
+  "tenant": "fern",
+  "policy": "trim-space-tab",
+  "rows": [
+    {
+      "row_id": "R01",
+      "tenant": "fern",
+      "title": "Plain title",
+      "note": "comma, revised note"
+    },
+    {
+      "row_id": "R02",
+      "tenant": "fern",
+      "title": "=SUM(1,2)",
+      "note": "line one\nline two"
+    },
+    {
+      "row_id": "R03",
+      "tenant": "fern",
+      "title": "+12",
+      "note": "He said \"hello\""
+    },
+    {
+      "row_id": "R04",
+      "tenant": "fern",
+      "title": "-42",
+      "note": ""
+    },
+    {
+      "row_id": "R05",
+      "tenant": "fern",
+      "title": "@lookup",
+      "note": null
+    },
+    {
+      "row_id": "R06",
+      "tenant": "fern",
+      "title": " =not-direct",
+      "note": "\t+not-direct"
+    },
+    {
+      "row_id": "R07",
+      "tenant": "fern",
+      "title": "'=already-text",
+      "note": "\\N"
+    },
+    {
+      "row_id": "R08",
+      "tenant": "fern",
+      "title": "Backslash \\ path",
+      "note": "normal"
+    },
+    {
+      "row_id": "X01",
+      "tenant": "fern-archive",
+      "title": "FOREIGN-SENTINEL-ONE",
+      "note": "=foreign"
+    },
+    {
+      "row_id": "X02",
+      "tenant": "other",
+      "title": "FOREIGN-SENTINEL-TWO",
+      "note": null
+    }
+  ]
+}
