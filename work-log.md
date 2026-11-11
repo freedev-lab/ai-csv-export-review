@@ -6,3 +6,18 @@
 - Result: FAILED as expected.
 - Cause: Substring matching instead of exact tenant comparison.
 - Next action: Fix tenant filtering.
+
+
+## Validation 2 — CSV Serialization
+
+### Test 1: Special Characters
+- Expected: CSV reader should recover the original columns and values.
+- Actual: Commas and embedded newlines produce incorrect records.
+- Result: FAILED as expected.
+- Cause: Manual CSV string concatenation.
+
+### Test 2: CRLF Record Endings
+- Expected: CSV records should use \r\n.
+- Actual: CSV uses \n.
+- Result: FAILED as expected.
+- Cause: Incorrect record separator.
