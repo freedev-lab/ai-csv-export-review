@@ -2,16 +2,15 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import json
 import pathlib
 import sys
 import typing
-import csv
-import io
 
 
 COLUMNS = ("row_id", "title", "note")
-
 
 
 def encode_cell(value: str | None, policy: str) -> tuple[str, bool]:
@@ -43,7 +42,6 @@ def encode_cell(value: str | None, policy: str) -> tuple[str, bool]:
     return encoded, neutralized
 
 
-
 def export_rows(payload: dict[str, typing.Any], arguments: argparse.Namespace) -> dict[str, typing.Any]:
     """Export fixture rows; policy is supplied by the consumer."""
     tenant = payload.get("tenant")
@@ -65,7 +63,6 @@ def export_rows(payload: dict[str, typing.Any], arguments: argparse.Namespace) -
         seen.add(row["row_id"])
         if any(key not in row or (row[key] is not None and not isinstance(row[key], str)) for key in ("title", "note")):
             raise ValueError(f"invalid row {index + 1}")
-        
 
     # P5: Create an in-memory CSV output.
     output = io.StringIO(newline="")
@@ -141,7 +138,8 @@ def main() -> int:
     except NotImplementedError as error:
         print(str(error), file=sys.stderr)
         return 3
-    except (OSError, UnicodeError, ValueError) as error:
+    # RecursionError: JSON nested too deeply for json.loads is a fatal input error (P1).
+    except (OSError, UnicodeError, ValueError, RecursionError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     return 0
