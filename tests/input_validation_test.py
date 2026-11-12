@@ -34,12 +34,16 @@ class InputValidationTests(unittest.TestCase):
 
     def _run_cli(self, payload):
 
+        return self._run_cli_with_text(json.dumps(payload))
+
+    def _run_cli_with_text(self, text):
+
         with tempfile.TemporaryDirectory() as directory:
 
             input_path = pathlib.Path(directory) / "input.json"
 
             input_path.write_text(
-                json.dumps(payload),
+                text,
                 encoding="utf-8"
             )
 
@@ -272,6 +276,23 @@ class InputValidationTests(unittest.TestCase):
             "input must be a JSON object",
             process.stderr
         )
+
+    def test_cli_rejects_excessively_nested_json(self):
+
+        # Valid JSON nested 100,000 levels deep makes json.loads raise
+        # RecursionError. P1: a fatal error exits 2 with a readable
+        # message, no traceback and no stdout.
+        process = self._run_cli_with_text(
+            "[" * 100_000 + "]" * 100_000
+        )
+
+        self.assertEqual(process.returncode, 2)
+
+        self.assertEqual(process.stdout, "")
+
+        self.assertIn("error:", process.stderr)
+
+        self.assertNotIn("Traceback", process.stderr)
 
 
 if __name__ == "__main__":
